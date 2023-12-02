@@ -1,4 +1,13 @@
 package br.com.luis.financial.domain.expense;
 
-public record ExpenseUpdateDTO(String name, ExpenseStatus status, Double value) {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+public record ExpenseUpdateDTO(
+        @NotBlank(message = "Nome é um campo obrigatório!")
+        String name,
+        @NotNull(message = "Status é um campo obrigatório!")
+        ExpenseStatus status,
+        @NotNull(message = "Valor é um campo obrigatório!")
+        Double value) {
 }

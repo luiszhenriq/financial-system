@@ -6,6 +6,8 @@ import br.com.luis.financial.infra.exception.IdNotFoundException;
 import br.com.luis.financial.models.Expense;
 import br.com.luis.financial.repositories.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,8 +25,8 @@ public class ExpenseService {
         return repository.save(newExpense);
     }
 
-    public List<Expense> findAll() {
-        return repository.findAll();
+    public Page<Expense> findAll(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     public Optional<Expense> findById(Long id) {

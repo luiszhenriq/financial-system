@@ -7,7 +7,10 @@ import br.com.luis.financial.models.Expense;
 import br.com.luis.financial.repositories.ExpenseRepository;
 import br.com.luis.financial.services.ExpenseService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,14 +30,14 @@ public class FinancialController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<Expense> createExpense(@RequestBody ExpenseDTO dto) {
+    public ResponseEntity<Expense> createExpense(@RequestBody @Valid ExpenseDTO dto) {
         Expense newExpense = service.createExpense(dto);
         return new ResponseEntity<>(newExpense, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<Expense>> findAllExpenses(){
-        List<Expense> expenses = service.findAll();
+    public ResponseEntity<Page<Expense>> findAllExpenses(Pageable pageable){
+        Page<Expense> expenses = service.findAll(pageable);
         if (expenses.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -59,7 +62,7 @@ public class FinancialController {
 
     @PutMapping(value = "/{id}")
     @Transactional
-    public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody ExpenseUpdateDTO updateDTO){
+    public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody @Valid ExpenseUpdateDTO updateDTO){
         Expense newExpense = service.update(id, updateDTO);
         return ResponseEntity.ok().body(newExpense);
     }

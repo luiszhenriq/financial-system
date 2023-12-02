@@ -5,6 +5,7 @@ import br.com.luis.financial.infra.security.TokenJWTData;
 import br.com.luis.financial.infra.security.TokenService;
 import br.com.luis.financial.models.User;
 import br.com.luis.financial.repositories.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,7 +30,7 @@ public class AuthenticationController {
     private AuthenticationManager manager;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody AuthenticationDTO data) {
+    public ResponseEntity login(@RequestBody @Valid AuthenticationDTO data) {
         var token = new UsernamePasswordAuthenticationToken(data.login(), data.password());
         var auth = manager.authenticate(token);
 
@@ -38,7 +39,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody AuthenticationDTO data) {
+    public ResponseEntity register(@RequestBody @Valid AuthenticationDTO data) {
         if (this.repository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().build();
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
