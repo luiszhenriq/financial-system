@@ -51,6 +51,12 @@ public class FinancialController {
         } else throw new IdNotFoundException("Despesa não encontrada com o ID: " + id);
     }
 
+    @GetMapping("/name")
+    public ResponseEntity<List<Expense>> findExpenseByName(@RequestParam String name) {
+        List<Expense> expense = repository.findByName(name);
+        return new ResponseEntity<>(expense, HttpStatus.OK);
+    }
+
     @PutMapping(value = "/{id}")
     @Transactional
     public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody ExpenseUpdateDTO updateDTO){

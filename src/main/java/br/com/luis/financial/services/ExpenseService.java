@@ -43,4 +43,8 @@ public class ExpenseService {
         repository.deleteById(id);
     }
 
+    public List<Expense> findByName(String name) {
+        return repository.findByName(name);
+    }
+
 }
