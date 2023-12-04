@@ -14,5 +14,7 @@ public record ExpenseDTO(
         @NotNull(message = "Status é um campo obrigatório!")
         ExpenseStatus status,
         @NotNull(message = "Valor é um campo obrigatório!")
-        Double value) {
+        Double value,
+        @NotNull(message = "Id do usuário não pode ser nulo!")
+        Long userId) {
 }

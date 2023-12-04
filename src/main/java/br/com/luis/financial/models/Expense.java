@@ -33,6 +33,11 @@ public class Expense {
 
     private Double value;
 
+    @ManyToOne()
+    @JoinColumn(name = "user_id")
+    private User user;
+
+
     public Expense(ExpenseDTO data) {
         this.name = data.name();
         this.datePayment = data.datePayment();

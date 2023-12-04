@@ -1,6 +1,7 @@
 package br.com.luis.financial.controller;
 
 import br.com.luis.financial.domain.expense.ExpenseDTO;
+import br.com.luis.financial.domain.expense.ExpenseResponseDTO;
 import br.com.luis.financial.domain.expense.ExpenseUpdateDTO;
 import br.com.luis.financial.infra.exception.IdNotFoundException;
 import br.com.luis.financial.models.Expense;
@@ -30,41 +31,50 @@ public class FinancialController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<Expense> createExpense(@RequestBody @Valid ExpenseDTO dto) {
-        Expense newExpense = service.createExpense(dto);
+    public ResponseEntity<ExpenseResponseDTO> createExpense(@RequestBody @Valid ExpenseDTO dto) {
+        ExpenseResponseDTO newExpense = service.createExpense(dto);
         return new ResponseEntity<>(newExpense, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<Page<Expense>> findAllExpenses(Pageable pageable){
-        Page<Expense> expenses = service.findAll(pageable);
+    public ResponseEntity<Page<ExpenseResponseDTO>> findAllExpenses(Pageable pageable) {
+        Page<ExpenseResponseDTO> expenses = service.findAll(pageable);
+
         if (expenses.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+
         return new ResponseEntity<>(expenses, HttpStatus.OK);
     }
 
+
     @GetMapping("/{id}")
-    public ResponseEntity<Expense> findExpenseById(@PathVariable Long id) {
-        Optional<Expense> expenseOptional = service.findById(id);
+    public ResponseEntity<ExpenseResponseDTO> findExpenseById(@PathVariable Long id) {
+        Optional<ExpenseResponseDTO> expenseOptional = service.findById(id);
 
         if (expenseOptional.isPresent()) {
-            Expense expense = expenseOptional.get();
+            ExpenseResponseDTO expense = expenseOptional.get();
             return new ResponseEntity<>(expense, HttpStatus.OK);
         } else throw new IdNotFoundException("Despesa não encontrada com o ID: " + id);
     }
 
     @GetMapping("/name")
-    public ResponseEntity<List<Expense>> findExpenseByName(@RequestParam String name) {
-        List<Expense> expense = repository.findByName(name);
+    public ResponseEntity<List<ExpenseResponseDTO>> findExpenseByName(@RequestParam String name) {
+        List<ExpenseResponseDTO> expense = service.findByName(name);
+
+        if (expense.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
         return new ResponseEntity<>(expense, HttpStatus.OK);
     }
 
+
     @PutMapping(value = "/{id}")
     @Transactional
-    public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody @Valid ExpenseUpdateDTO updateDTO){
-        Expense newExpense = service.update(id, updateDTO);
-        return ResponseEntity.ok().body(newExpense);
+    public ResponseEntity<ExpenseResponseDTO> updateExpense(@PathVariable Long id, @RequestBody @Valid ExpenseUpdateDTO updateDTO){
+        ExpenseResponseDTO updatedExpense = service.update(id, updateDTO);
+        return ResponseEntity.ok().body(updatedExpense);
     }
 
     @DeleteMapping("/{id}")
